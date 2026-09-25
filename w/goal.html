@@ -53,9 +53,10 @@
   <div class="track"><div class="fill" id="fill"></div><div class="pct" id="pct"></div></div>
 </div>
 <canvas id="confetti"></canvas>
-<script src="lib.js?v=20260925135414"></script>
+<script src="lib.js?v=20260925141658"></script>
 <script>
   OL.initPreview(); OL.initAccent();
+  OL.applyStyle({ text: ".title, .nums, .pct", panel: ".track" });
   const style = OL.pick("style", ["sleek", "neon", "pixel"]);
   document.body.classList.add("s-" + style);
 

@@ -6,7 +6,8 @@
   const pageParams = new URLSearchParams(location.search);
 
   const widget = WIDGETS.find(w => w.id === pageParams.get("w")) || WIDGETS[0];
-  const { fields, size } = widget;
+  const { size } = widget;
+  const fields = OS.fields(widget); // own fields + shared styling fields
   const [width, height] = size;
   // `&cfg=` (a widget query string) pre-fills the form: saved overlays, pasted links, themes
   const values = OS.initialValues(widget, pageParams.get("cfg") || "");
@@ -46,32 +47,63 @@
     return seg;
   }
 
+  function dropdown(field) {
+    const { key, options } = field;
+    const names = tr(field, "labels") || options;
+    const el = document.createElement("select");
+    el.id = "f-" + key;
+    options.forEach((opt, i) => el.append(new Option(names[i], opt, false, opt === values[key])));
+    el.onchange = () => { values[key] = el.value; update(); };
+    return el;
+  }
+
   function input(field) {
-    const { key, type, min, max, required } = field;
+    const { key, type, min, max, step, required } = field;
     const el = document.createElement("input");
     Object.assign(el, { type, value: values[key], id: "f-" + key, required: !!required });
+    if (step) el.step = step;
     const ph = tr(field, "placeholder");
     if (ph) el.placeholder = ph;
     if (min != null) el.min = min;
     if (max != null) el.max = max;
-    el.oninput = () => { values[key] = el.value; el.classList.remove("invalid"); update(); };
+    el.oninput = () => { values[key] = el.value; el.classList.remove("invalid"); if (out) out.textContent = el.value; update(); };
     values[key] = el.value; // the browser may have rejected a value from &cfg= (e.g. "red" for a colour input)
+    // sliders show their number next to them
+    let out;
+    if (type === "range") {
+      const wrap = document.createElement("div");
+      wrap.className = "range";
+      out = document.createElement("output");
+      out.textContent = el.value;
+      wrap.append(el, out);
+      wrap.id = "w-" + key;
+      return wrap;
+    }
     return el;
   }
 
   function renderForm() {
     const form = $("form");
+    // shared styling options go into a collapsible section below the widget's own settings
+    const styleBox = document.createElement("details");
+    styleBox.className = "more";
+    styleBox.innerHTML = `<summary>${UI.moreStyle}</summary>`;
     for (const field of fields) {
       const box = document.createElement("div");
       box.className = "field";
       const label = document.createElement("label");
       label.textContent = tr(field, "label") + (field.required ? " *" : "");
-      const control = field.type === "select" ? segmented(field) : input(field);
+      const control = field.type === "select" ? segmented(field) : field.type === "dropdown" ? dropdown(field) : input(field);
       if (control.id) label.htmlFor = control.id;
       box.append(label, control);
       const hint = tr(field, "hint");
       if (hint) { const s = document.createElement("small"); s.textContent = hint; box.append(s); }
-      form.append(box);
+      (field.group === "style" ? styleBox : form).append(box);
+    }
+    if (styleBox.children.length > 1) {
+      // open it automatically when a saved/pasted overlay already uses styling options
+      styleBox.open = fields.some(f => f.group === "style" && String(values[f.key]) !== f.def);
+      form.append(styleBox);
     }
   }
 

@@ -50,9 +50,10 @@
 </head>
 <body>
 <div id="chat"></div>
-<script src="lib.js?v=20260925135414"></script>
+<script src="lib.js?v=20260925141658"></script>
 <script>
   OL.initPreview();
+  OL.applyStyle({ text: ".msg > span:not(.name)", panel: ".msg" });
   document.body.classList.add("s-" + OL.pick("style", ["bubble", "neon", "terminal", "cozy"]));
   if (OL.has("size")) document.documentElement.style.setProperty("--size", OL.num("size", 24) + "px");
   const MAX = OL.num("max", 8);

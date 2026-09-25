@@ -3,9 +3,25 @@
 // Text can be translated with a `uk: { ... }` object next to it (see i18n.js).
 window.ETSY_URL = ""; // TODO: your Etsy shop link. While empty, PRO buttons show "Coming soon".
 
+// Styling options shared by all widgets (shown under "More styling" in the editor). Each widget lists the
+// ones that make sense for it in `style: [...]`. Handled in w/lib.js → OL.applyStyle().
+const FONTS = ["Inter", "Poppins", "Montserrat", "Space Grotesk", "Archivo", "Bebas Neue", "Oswald", "Nunito", "Quicksand",
+               "Orbitron", "Press Start 2P", "JetBrains Mono", "Permanent Marker", "Pacifico"];
+window.STYLE_FIELDS = {
+  font:   { key: "font", label: "Font", uk: { label: "Шрифт", labels: ["Як у стилі", ...FONTS] }, type: "dropdown", options: ["", ...FONTS], labels: ["Style default", ...FONTS], def: "" },
+  text:   { key: "text", label: "Text colour", type: "color", def: "#ffffff", hint: "White = keep the style's colours.", uk: { label: "Колір тексту", hint: "Білий = кольори стилю." } },
+  panel:  { key: "panel", label: "Background colour", uk: { label: "Колір підкладки" }, type: "color", def: "#000000" },
+  alpha:  { key: "alpha", label: "Background opacity (%)", uk: { label: "Непрозорість підкладки (%)" }, type: "range", min: 0, max: 100, def: "90" },
+  corner: { key: "corner", label: "Corner roundness (px)", uk: { label: "Заокруглення кутів (px)" }, type: "range", min: 0, max: 40, def: "12" },
+  scale:  { key: "scale", label: "Size (%)", uk: { label: "Розмір (%)" }, type: "range", min: 50, max: 200, step: 5, def: "100" },
+  speed:  { key: "speed", label: "Animation speed", uk: { label: "Швидкість анімації" }, type: "select", options: ["0.5", "1", "1.5", "2"], labels: ["0.5×", "1×", "1.5×", "2×"], def: "1" },
+};
+for (const f of Object.values(STYLE_FIELDS)) f.group = "style";
+
 window.WIDGETS = [
   {
     id: "starting-soon",
+    style: ["font", "text", "speed"],
     name: "Starting Soon Screen",
     blurb: "Animated countdown screen in 4 styles. Minimal, neon, pixel and cozy.",
     uk: { name: "Заставка «Starting Soon»", blurb: "Анімована заставка з таймером перед стрімом. 4 стилі: мінімалізм, неон, піксель, затишний." },
@@ -24,6 +40,7 @@ window.WIDGETS = [
   },
   {
     id: "webcam-frame",
+    style: ["font", "text", "panel", "alpha", "speed"],
     name: "Animated Webcam Frame",
     blurb: "Moving borders for your facecam: neon beam, rainbow, glitch, pixel, glass, minimal.",
     uk: { name: "Анімована рамка для вебки", blurb: "Рухомі рамки для камери: неоновий промінь, райдуга, глітч, піксель, скло, мінімал." },
@@ -40,6 +57,7 @@ window.WIDGETS = [
   },
   {
     id: "socials",
+    style: ["font", "text", "panel", "alpha", "corner", "scale", "speed"],
     name: "Socials Rotator",
     blurb: "Your socials cycling in one sleek lower-third, with real logos.",
     uk: { name: "Ротатор соцмереж", blurb: "Ваші соцмережі по черзі в одній стильній панелі, зі справжніми логотипами." },
@@ -61,6 +79,7 @@ window.WIDGETS = [
   },
   {
     id: "chat",
+    style: ["font", "text", "panel", "alpha", "corner", "speed"],
     name: "Twitch Chat Overlay",
     blurb: "Your live chat on stream with emotes. Bubble, neon, terminal and cozy styles. No login.",
     uk: { name: "Чат Twitch на стрімі", blurb: "Живий чат на екрані з емоутами. Стилі: бульбашки, неон, термінал, затишний. Без логіну." },
@@ -79,6 +98,7 @@ window.WIDGETS = [
   },
   {
     id: "goal",
+    style: ["font", "text", "panel", "alpha", "corner", "scale", "speed"],
     name: "Goal Bar",
     blurb: "Animated progress bar for sub, follower or donation goals. Confetti when you hit it.",
     uk: { name: "Прогрес-бар цілі", blurb: "Анімована шкала цілі для підписок, фоловерів чи донатів. Конфеті, коли ціль досягнуто." },
@@ -97,6 +117,7 @@ window.WIDGETS = [
   },
   {
     id: "timer",
+    style: ["font", "text", "panel", "alpha", "corner", "scale", "speed"],
     name: "Stream Timer & Clock",
     blurb: "Show how long you've been live, count down to the end of stream, or show the time.",
     uk: { name: "Таймер стріму і годинник", blurb: "Скільки триває стрім, відлік до кінця або просто годинник." },
@@ -115,6 +136,7 @@ window.WIDGETS = [
   },
   {
     id: "counter",
+    style: ["font", "text", "panel", "alpha", "corner", "scale", "speed"],
     name: "Death / Win Counter",
     blurb: "Count deaths, wins, kills or anything. Click + / − in OBS. Remembers the number.",
     uk: { name: "Лічильник смертей / перемог", blurb: "Рахуйте смерті, перемоги, кіли. Натискайте + / − прямо в OBS. Число запам'ятовується.",
@@ -134,14 +156,14 @@ window.WIDGETS = [
 ];
 
 window.PRO = [
-  { name: "Scene Kit PRO", blurb: "Animated Just Chatting and Gameplay layouts with windows for your camera, game and chat. Aurora, synthwave and glitch themes.",
-    uk: { blurb: "Анімовані сцени Just Chatting і Gameplay з вікнами для камери, гри й чату. Теми: північне сяйво, синтвейв, глітч." },
+  { name: "Scene Kit PRO", blurb: "Full Just Chatting and Gameplay layouts with windows for your camera, game and chat. Dark Mode, Synth Runner and Glass series.",
+    uk: { blurb: "Готові сцени Just Chatting і Gameplay з вікнами для камери, гри й чату. Серії Dark Mode, Synth Runner і Glass." },
     img: "img/pro-scene-kit.jpg", price: "$15" },
-  { name: "Live Alerts PRO", blurb: "Huge animated alerts for subs, gift subs, raids and bits, with particle bursts and sound. No login.",
-    uk: { name: "Живі алерти PRO", blurb: "Великі анімовані сповіщення про підписки, подарунки, рейди й біти, з вибухом частинок і звуком. Без логіну." },
+  { name: "Live Alerts PRO", blurb: "Big editorial-style alerts for subs, gift subs, raids and bits, with sound. Same 3 design series. No login.",
+    uk: { name: "Живі алерти PRO", blurb: "Великі стильні сповіщення про підписки, подарунки, рейди й біти, зі звуком. Ті самі 3 серії. Без логіну." },
     img: "img/pro-alerts.jpg", price: "$12" },
-  { name: "Stream Screens PRO", blurb: "Starting Soon, BRB and Ending in hyperspace, aurora, glitch and particle styles. 12 animated scenes.",
-    uk: { blurb: "Starting Soon, BRB і Ending у стилях гіперпростір, північне сяйво, глітч і частинки. 12 анімованих сцен." },
+  { name: "Stream Screens PRO", blurb: "Starting Soon, BRB and Ending in 3 pro design series: Dark Mode, Synth Runner and Glass. Huge type, live countdown, your name and socials.",
+    uk: { blurb: "Starting Soon, BRB і Ending у 3 професійних серіях: Dark Mode, Synth Runner і Glass. Великі заголовки, таймер, ваше ім'я й соцмережі." },
     img: "img/pro-stream-screens.jpg", price: "$19" },
   { name: "Emote Rain", blurb: "Your chat's emotes fall onto the stream with real physics, bounce and pile up.",
     uk: { name: "Дощ емоутів", blurb: "Емоути з чату падають на стрім зі справжньою фізикою, відскакують і складаються в купу." },

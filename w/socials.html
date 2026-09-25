@@ -52,7 +52,7 @@
 </head>
 <body>
 <div id="wrap"></div>
-<script src="lib.js?v=20260925135414"></script>
+<script src="lib.js?v=20260925141658"></script>
 <script>
   // label, brand colour, Simple Icons slug, prefix shown before the handle
   const NETS = {
@@ -66,6 +66,7 @@
     facebook:  { label: "Facebook",  brand: "#1877f2", slug: "facebook",  prefix: "" },
   };
   OL.initPreview(); OL.initAccent();
+  OL.applyStyle({ text: ".txt span, .txt small", panel: ".card" });
   const style = OL.pick("style", ["slide", "pill", "neon"]);
   document.body.classList.add("s-" + style);
   const wrap = document.getElementById("wrap");

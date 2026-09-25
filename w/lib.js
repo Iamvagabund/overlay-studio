@@ -83,6 +83,41 @@
     },
 
     emoteUrl: (id, size = "2.0") => `https://static-cdn.jtvnw.net/emoticons/v2/${id}/default/dark/${size}`,
+
+    /**
+     * Shared styling options every widget understands (the editor's "More styling" section):
+     *   &font=Poppins  &text=%23ffffff  &panel=%23000000  &alpha=80  &corner=12  &scale=120  &speed=1.5
+     * `text` and `panel` are CSS selectors for this widget's text and its card/bubble/box.
+     */
+    applyStyle({ text, panel } = {}) {
+      const css = [];
+      const font = params.get("font");
+      if (font) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@400;700;900&display=swap`;
+        document.head.append(link);
+        css.push(`body, body * { font-family: "${font.replace(/"/g, "")}", sans-serif !important; }`);
+      }
+      const color = params.get("text");
+      if (color && text) css.push(`${text} { color: ${color} !important; -webkit-text-fill-color: ${color} !important; }`);
+      const bg = params.get("panel"), alpha = params.get("alpha");
+      if ((bg || alpha) && panel) {
+        const hex = (bg || "#000000").replace("#", "");
+        const [r, g, b] = [0, 2, 4].map(i => parseInt(hex.slice(i, i + 2), 16) || 0);
+        const a = Math.min(100, Math.max(0, OL.num("alpha", 90))) / 100;
+        css.push(`${panel} { background: rgba(${r},${g},${b},${a}) !important; }`);
+      }
+      if (params.has("corner") && panel) css.push(`${panel} { border-radius: ${OL.num("corner", 12)}px !important; }`);
+      if (params.has("scale")) document.body.style.zoom = OL.num("scale", 100) / 100;
+      if (css.length) document.head.append(Object.assign(document.createElement("style"), { textContent: css.join("\n") }));
+      // animation speed: rescale every running CSS animation (new ones included) to the chosen rate
+      const speed = OL.num("speed", 1);
+      if (speed !== 1 && document.getAnimations) {
+        const apply = () => document.getAnimations().forEach(a => { if (a.playbackRate !== speed) a.playbackRate = speed; });
+        apply(); setInterval(apply, 300);
+      }
+    },
   };
 
   window.OL = OL;

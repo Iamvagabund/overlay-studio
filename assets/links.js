@@ -5,10 +5,13 @@
   window.OS = {
     ROOT,
 
+    /** A widget's own fields plus the shared styling fields it opts into (`style: [...]`). */
+    fields: widget => [...widget.fields, ...(widget.style || []).map(k => STYLE_FIELDS[k])],
+
     /** Query string for `values`; fields at their default value are left out to keep links short. */
-    query({ fields }, values, extra = {}) {
+    query(widget, values, extra = {}) {
       const q = new URLSearchParams();
-      for (const { key, def } of fields) {
+      for (const { key, def } of OS.fields(widget)) {
         const v = String(values[key] ?? "").trim();
         if (v !== "" && v !== def) q.set(key, v);
       }
@@ -24,7 +27,7 @@
     },
 
     /** First required field that is still empty (e.g. the Twitch channel for chat), or undefined. */
-    missing: ({ fields }, values) => fields.find(f => f.required && !String(values[f.key] ?? "").trim()),
+    missing: (widget, values) => OS.fields(widget).find(f => f.required && !String(values[f.key] ?? "").trim()),
 
     /**
      * URL for the live preview only. Adds `previewParams`, and `demoParams` (fake messages) while a
@@ -36,9 +39,9 @@
     },
 
     /** Starting values: field defaults, overridden by a widget query string (a saved overlay, a pasted link, a theme). */
-    initialValues({ fields }, qs = "") {
+    initialValues(widget, qs = "") {
       const cfg = new URLSearchParams(qs);
-      return Object.fromEntries(fields.map(({ key, def }) => [key, cfg.get(key) ?? def]));
+      return Object.fromEntries(OS.fields(widget).map(({ key, def }) => [key, cfg.get(key) ?? def]));
     },
 
     editorHref: (widgetId, qs) => `editor.html?w=${widgetId}${qs ? "&cfg=" + encodeURIComponent(qs) : ""}`,

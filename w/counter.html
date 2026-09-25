@@ -40,9 +40,10 @@
 <body>
 <div class="box"><div class="icon" id="icon"></div><div><div class="label" id="label"></div><div class="n" id="n"></div></div></div>
 <div class="ctrl"><button id="minus" title="−1">−</button><button id="plus" title="+1">+</button><button id="reset" title="Reset">↺</button></div>
-<script src="lib.js?v=20260925135414"></script>
+<script src="lib.js?v=20260925141658"></script>
 <script>
   OL.initPreview(); OL.initAccent();
+  OL.applyStyle({ text: ".label, .n", panel: ".box" });
   document.body.classList.add("s-" + OL.pick("style", ["card", "comic", "pixel"]));
   document.getElementById("label").textContent = OL.str("label", "Deaths");
   const iconEl = document.getElementById("icon");

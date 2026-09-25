@@ -38,9 +38,10 @@
 </head>
 <body>
 <div class="box" id="box"><div class="dot"></div><div class="label" id="label"></div><div class="time" id="time"></div></div>
-<script src="lib.js?v=20260925135414"></script>
+<script src="lib.js?v=20260925141658"></script>
 <script>
   OL.initPreview(); OL.initAccent();
+  OL.applyStyle({ text: ".label, .time", panel: ".box" });
   document.body.classList.add("s-" + OL.pick("style", ["pill", "neon", "pixel"]));
   const mode = OL.pick("mode", ["uptime", "countdown", "clock"]);
   const defaultLabel = { uptime: "Live for", countdown: "Ends in", clock: "" }[mode];

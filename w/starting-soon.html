@@ -93,10 +93,11 @@
   <div class="timer" id="timer"></div>
   <div class="bar" id="bar"></div>
 </div>
-<script src="lib.js?v=20260925135414"></script>
+<script src="lib.js?v=20260925141658"></script>
 <script>
   // Settings via URL: ?theme=minimal|neon|pixel|cozy &title=... &sub=... &minutes=10 or &until=19:30 &accent=%23ff0000 &done=...
   OL.initAccent();
+  OL.applyStyle({ text: ".title, .sub, .timer" });
   const theme = OL.pick("theme", ["minimal", "neon", "pixel", "cozy"]);
   const DEFAULTS = {
     minimal: ["Starting Soon", "Grab a drink, we'll be live shortly"],
