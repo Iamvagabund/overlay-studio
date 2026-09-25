@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stream Timer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Orbitron:wght@500;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  /* Settings via URL:
+     ?mode=uptime|countdown|clock
+       uptime:    &since=19:00 (stream start time; empty = counts from when OBS loads it)
+       countdown: &minutes=60 or &until=23:00
+       clock:     &h12=1 for 12-hour clock
+     &label=LIVE FOR  &style=pill|neon|pixel  &accent=%23ef4444  &preview=1 */
+  :root { --accent: #ef4444; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+  body.preview { background: linear-gradient(135deg, #1e293b, #0f172a 60%, #312e81); }
+  .box { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 16px; color: #fff; white-space: nowrap; }
+  .label { font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: .85; }
+  .time { font-size: 46px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: blink 1.4s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+  .ending .time { color: var(--accent); animation: beat 1s ease-in-out infinite; }
+  @keyframes beat { 0% { transform: scale(1.12); } 60%, 100% { transform: scale(1); } }
+
+  .s-pill { font-family: "Space Grotesk", sans-serif; }
+  .s-pill .box { background: #0d0f14e6; padding: 14px 30px; border-radius: 999px; border: 1px solid #ffffff22; box-shadow: 0 12px 40px #0008; }
+
+  .s-neon { font-family: Orbitron, sans-serif; }
+  .s-neon .box { padding: 14px 30px; border: 2px solid var(--accent); border-radius: 14px; background: #05010acc; box-shadow: 0 0 20px var(--accent), inset 0 0 20px color-mix(in srgb, var(--accent) 35%, transparent); }
+  .s-neon .time { text-shadow: 0 0 14px var(--accent); }
+
+  .s-pixel { font-family: "Press Start 2P", monospace; }
+  .s-pixel .box { background: #000; border: 6px solid #fff; box-shadow: 6px 6px 0 var(--accent); padding: 18px 26px; }
+  .s-pixel .label { font-size: 14px; letter-spacing: 0; }
+  .s-pixel .time { font-size: 30px; }
+  .s-pixel .dot { border-radius: 0; animation-timing-function: steps(1); }
+</style>
+</head>
+<body>
+<div class="box" id="box"><div class="dot"></div><div class="label" id="label"></div><div class="time" id="time"></div></div>
+<script src="lib.js"></script>
+<script>
+  OL.initPreview(); OL.initAccent();
+  document.body.classList.add("s-" + OL.pick("style", ["pill", "neon", "pixel"]));
+  const mode = OL.pick("mode", ["uptime", "countdown", "clock"]);
+  const defaultLabel = { uptime: "Live for", countdown: "Ends in", clock: "" }[mode];
+  const labelEl = document.getElementById("label"), timeEl = document.getElementById("time"), box = document.getElementById("box");
+  labelEl.textContent = OL.str("label", defaultLabel);
+  if (!labelEl.textContent) labelEl.remove();
+
+  const loadedAt = Date.now();
+  const start = OL.str("since") ? OL.lastTime(OL.str("since")) : loadedAt;
+  const end = OL.str("until") ? OL.nextTime(OL.str("until")) : loadedAt + OL.num("minutes", 60) * 60000;
+  const h12 = OL.has("h12");
+
+  function render() {
+    const now = Date.now();
+    if (mode === "uptime") timeEl.textContent = OL.clock((now - start) / 1000, { alwaysHours: true });
+    if (mode === "countdown") {
+      const left = (end - now) / 1000;
+      timeEl.textContent = OL.clock(Math.ceil(left));
+      box.classList.toggle("ending", left > 0 && left <= 60);
+    }
+    if (mode === "clock") {
+      const d = new Date(), h = d.getHours();
+      timeEl.textContent = h12
+        ? `${(h % 12) || 12}:${OL.pad(d.getMinutes())} ${h < 12 ? "AM" : "PM"}`
+        : `${OL.pad(h)}:${OL.pad(d.getMinutes())}`;
+    }
+  }
+  render(); setInterval(render, 250);
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Counter</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Press+Start+2P&family=Bangers&display=swap" rel="stylesheet">
+<style>
+  /* Settings via URL:
+     ?label=Deaths  &icon=💀  &start=0  &style=card|comic|pixel  &accent=%23ef4444  &id=deaths  &preview=1
+     Change the number: in OBS right-click the source -> Interact, then click + / − or press the + / − / 0 keys.
+     The number is remembered between OBS restarts (per &id). */
+  :root { --accent: #ef4444; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; user-select: none; }
+  body.preview { background: linear-gradient(135deg, #1e293b, #0f172a 60%, #312e81); }
+  .box { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 18px; color: #fff; white-space: nowrap; }
+  .icon { font-size: 54px; line-height: 1; }
+  .label { font-size: 22px; opacity: .8; text-transform: uppercase; letter-spacing: 2px; }
+  .n { font-size: 64px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; display: inline-block; }
+  .n.bump { animation: bump .45s cubic-bezier(.2, 1.8, .4, 1); }
+  @keyframes bump { 0% { transform: scale(1.6); color: var(--accent); } }
+  .ctrl { position: absolute; right: 8px; bottom: 8px; display: flex; gap: 6px; opacity: 0; transition: opacity .2s; }
+  body:hover .ctrl { opacity: 1; }
+  .ctrl button { width: 34px; height: 34px; border-radius: 8px; border: 0; background: #000c; color: #fff; font-size: 20px; cursor: pointer; }
+
+  .s-card { font-family: "Space Grotesk", sans-serif; }
+  .s-card .box { background: #0d0f14e6; padding: 16px 30px 16px 22px; border-radius: 20px; border-left: 6px solid var(--accent); box-shadow: 0 14px 40px #0008; }
+
+  .s-comic { font-family: Bangers, cursive; }
+  .s-comic .box { background: #ffd23f; color: #111; padding: 12px 30px; border: 5px solid #111; border-radius: 16px; box-shadow: 8px 8px 0 #111; transform: translate(-50%, -50%) rotate(-3deg); }
+  .s-comic .label { font-size: 30px; opacity: 1; letter-spacing: 1px; }
+  .s-comic .n { font-size: 72px; color: var(--accent); -webkit-text-stroke: 3px #111; }
+
+  .s-pixel { font-family: "Press Start 2P", monospace; }
+  .s-pixel .box { background: #000; border: 6px solid #fff; box-shadow: 6px 6px 0 var(--accent); padding: 16px 24px; }
+  .s-pixel .label { font-size: 14px; letter-spacing: 0; }
+  .s-pixel .n { font-size: 40px; }
+  .s-pixel .icon { font-size: 40px; }
+</style>
+</head>
+<body>
+<div class="box"><div class="icon" id="icon"></div><div><div class="label" id="label"></div><div class="n" id="n"></div></div></div>
+<div class="ctrl"><button id="minus" title="−1">−</button><button id="plus" title="+1">+</button><button id="reset" title="Reset">↺</button></div>
+<script src="lib.js"></script>
+<script>
+  OL.initPreview(); OL.initAccent();
+  document.body.classList.add("s-" + OL.pick("style", ["card", "comic", "pixel"]));
+  document.getElementById("label").textContent = OL.str("label", "Deaths");
+  const iconEl = document.getElementById("icon");
+  iconEl.textContent = OL.str("icon", "💀");
+  if (OL.params.get("icon") === "none") iconEl.remove();
+
+  const start = OL.num("start", 0);
+  const storeKey = "ol-counter:" + OL.str("id", OL.str("label", "Deaths").toLowerCase());
+  const nEl = document.getElementById("n");
+  let n = start;
+  // the saved value wins over &start= so an OBS restart doesn't wipe the count; ↺ goes back to &start=
+  try { const saved = localStorage.getItem(storeKey); if (saved !== null && Number.isFinite(Number(saved))) n = Number(saved); } catch {}
+
+  function set(v, animate = true) {
+    n = v; nEl.textContent = n;
+    try { localStorage.setItem(storeKey, n); } catch {}
+    if (animate) { nEl.classList.remove("bump"); void nEl.offsetWidth; nEl.classList.add("bump"); }
+  }
+  set(n, false);
+  document.getElementById("plus").onclick = () => set(n + 1);
+  document.getElementById("minus").onclick = () => set(n - 1);
+  document.getElementById("reset").onclick = () => set(start);
+  addEventListener("keydown", e => {
+    if (e.key === "+" || e.key === "=" || e.key === "ArrowUp") set(n + 1);
+    if (e.key === "-" || e.key === "ArrowDown") set(n - 1);
+    if (e.key === "0") set(start);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Animated OBS Overlays: Starting Soon, Twitch Chat, Webcam Frames | Overlay Studio</title>
+<meta name="description" content="Free animated overlays for OBS and Streamlabs. Customize a starting soon screen, Twitch chat, webcam frame, goal bar, stream timer or socials bar in your browser and paste one link into OBS. No download, no login.">
+<meta property="og:title" content="Overlay Studio: free animated OBS overlays">
+<meta property="og:description" content="Customize animated stream overlays in your browser and paste one link into OBS.">
+<meta property="og:image" content="https://iamvagabund.github.io/overlay-studio/img/pro-stream-screens.jpg">
+<meta name="root" content="./">
+<link rel="alternate" hreflang="en" href="https://iamvagabund.github.io/overlay-studio/">
+<link rel="alternate" hreflang="uk" href="https://iamvagabund.github.io/overlay-studio/uk/">
+<link rel="alternate" hreflang="x-default" href="https://iamvagabund.github.io/overlay-studio/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="./"><i></i>Overlay Studio</a>
+  <nav><a href="#free">Free overlays</a><a href="#pro">PRO</a><a href="#guides">Guides</a><a href="#faq">FAQ</a><a class="lang" href="uk/" hreflang="uk">UA</a><a class="btn primary" href="editor.html">Open editor</a></nav>
+</div></header>
+
+<main>
+  <section class="hero"><div class="wrap">
+    <h1>Animated stream overlays.<br><span>Free. One link. Done.</span></h1>
+    <p>Customize a Starting Soon screen, live Twitch chat, webcam frame, goal bar, stream timer or socials bar right in your browser, then paste a single link into OBS. No downloads, no accounts, no code.</p>
+    <a class="btn primary" href="editor.html">Customize your overlay →</a>
+    <div class="badges"><span>OBS Studio</span><span>Streamlabs</span><span>Twitch</span><span>YouTube</span><span>Kick</span><span>100% free</span></div>
+  </div></section>
+
+  <section id="free"><div class="wrap">
+    <h2>Free overlays</h2>
+    <p class="lead">Pick one, set your text and colors, copy the link. It updates live in OBS.</p>
+    <div class="grid" id="free-grid"></div>
+  </div></section>
+
+  <div class="wrap"><div class="ad-slot">Advertisement</div></div>
+
+  <section id="how"><div class="wrap">
+    <h2>How it works</h2>
+    <p class="lead">From zero to a pro-looking stream in about a minute.</p>
+    <div class="steps">
+      <div><b>Customize</b><p>Choose a style, type your name, pick colors. The preview updates live.</p></div>
+      <div><b>Copy the link</b><p>One click copies a link with all your settings baked in.</p></div>
+      <div><b>Add to OBS</b><p>Sources → + → Browser → paste the link. Set the size shown in the editor.</p></div>
+    </div>
+  </div></section>
+
+  <section id="pro"><div class="wrap">
+    <h2>PRO packs</h2>
+    <p class="lead">Want the wow effect? Premium animated packs, a one-time purchase that is yours forever.</p>
+    <div class="grid" id="pro-grid"></div>
+  </div></section>
+
+  <section id="guides"><div class="wrap">
+    <h2>Guides</h2>
+    <p class="lead">Step-by-step help for setting up your stream.</p>
+    <div class="guides">
+      <a href="guides/how-to-add-twitch-chat-to-obs.html">How to add Twitch chat to OBS<small>Free, no login, two minutes.</small></a>
+      <a href="guides/how-to-make-a-starting-soon-screen-in-obs.html">How to make an animated Starting Soon screen<small>With a countdown that survives OBS restarts.</small></a>
+    </div>
+  </div></section>
+
+  <section id="faq" class="faq"><div class="wrap">
+    <h2>FAQ</h2>
+    <details><summary>Are these overlays really free?</summary><p>Yes. The overlays on this site are free to use on your streams, including monetized ones. PRO packs are optional paid extras.</p></details>
+    <details><summary>How do I add an overlay to OBS?</summary><p>In OBS click Sources → + → Browser, paste the link from the editor into URL, and set the width and height shown under the preview.</p></details>
+    <details><summary>Does the Twitch chat overlay need my password or a token?</summary><p>No. It reads your public chat by channel name only, read-only. Nothing to log in to.</p></details>
+    <details><summary>Does the countdown reset if OBS restarts?</summary><p>If you set minutes, yes. If you set an exact time (like 19:30), it always shows the correct time left.</p></details>
+    <details><summary>Does it work with Streamlabs, YouTube and Kick?</summary><p>Any software with a Browser Source works. The chat overlay currently supports Twitch chat.</p></details>
+  </div></section>
+</main>
+
+<footer><div class="wrap">© <span id="y"></span> Overlay Studio. Made for streamers.</div></footer>
+
+<script src="assets/i18n.js"></script>
+<script src="assets/widgets.js"></script>
+<script src="assets/home.js"></script>
+</body>
+</html>

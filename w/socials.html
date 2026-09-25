@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Socials Rotator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* Settings via URL:
+     &twitch=name &youtube=name &x=name &instagram=name &tiktok=name &kick=name &discord=invite &facebook=name
+     &style=slide|pill|neon  &interval=6 (seconds per item)  &pos=bl|br|tl|tr|bc  &accent=%23ff00aa */
+  :root { --accent: #a855f7; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; font-family: "Space Grotesk", sans-serif; }
+  body.preview { background: linear-gradient(135deg, #1e293b, #0f172a 60%, #312e81); }
+  #wrap { position: absolute; display: flex; }
+  .bl { left: 40px; bottom: 40px; } .br { right: 40px; bottom: 40px; } .tl { left: 40px; top: 40px; } .tr { right: 40px; top: 40px; }
+  .bc { left: 50%; bottom: 40px; transform: translateX(-50%); }
+  .card { display: flex; align-items: center; gap: 18px; color: #fff; }
+  .icon { width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; background: var(--brand); flex: none; position: relative; overflow: hidden; }
+  .icon i { width: 36px; height: 36px; background: #fff; -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
+  .icon b { position: absolute; font-size: 30px; }
+  .icon.has-logo b { display: none; }
+  .txt small { display: block; font-size: 16px; opacity: .65; text-transform: uppercase; letter-spacing: 3px; }
+  .txt span { font-size: 34px; font-weight: 700; }
+
+  /* SLIDE: dark card slides in, brand-coloured bar */
+  .s-slide .card { background: #0d0f14ee; padding: 14px 34px 14px 14px; border-radius: 20px; border-left: 6px solid var(--brand); box-shadow: 0 20px 50px #0008; }
+  .s-slide .card.in { animation: slideIn .7s cubic-bezier(.2, 1.4, .4, 1) both; }
+  .s-slide .card.out { animation: slideOut .5s ease-in both; }
+  @keyframes slideIn { from { transform: translateX(-120%); opacity: 0; } }
+  @keyframes slideOut { to { transform: translateX(-120%); opacity: 0; } }
+
+  /* PILL: glass pill that flips like a card */
+  .s-pill .card { background: #ffffff1f; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid #ffffff55; padding: 10px 36px 10px 10px; border-radius: 999px; }
+  .s-pill .icon { border-radius: 50%; }
+  .s-pill #wrap { perspective: 800px; }
+  .s-pill .card.in { animation: flipIn .8s cubic-bezier(.3, 1.3, .5, 1) both; }
+  .s-pill .card.out { animation: flipOut .4s ease-in both; }
+  @keyframes flipIn { from { transform: rotateX(-90deg); opacity: 0; } }
+  @keyframes flipOut { to { transform: rotateX(90deg); opacity: 0; } }
+
+  /* NEON: glowing outline with typewriter handle */
+  .s-neon { font-family: Orbitron, sans-serif; }
+  .s-neon .card { padding: 12px 36px 12px 12px; border: 2px solid var(--brand); border-radius: 14px; background: #05010acc; box-shadow: 0 0 20px var(--brand), inset 0 0 20px color-mix(in srgb, var(--brand) 40%, transparent); }
+  .s-neon .txt span { text-shadow: 0 0 12px var(--brand); font-size: 30px; }
+  .s-neon .txt span::after { content: "▌"; animation: cur .8s steps(1) infinite; color: var(--brand); }
+  .s-neon .card.in { animation: neonOn .9s steps(1) both; }
+  .s-neon .card.out { animation: fade .3s both; }
+  @keyframes neonOn { 0% { opacity: 0; } 10% { opacity: 1; } 20% { opacity: .2; } 30%, 100% { opacity: 1; } }
+  @keyframes fade { to { opacity: 0; } }
+  @keyframes cur { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+<div id="wrap"></div>
+<script src="lib.js"></script>
+<script>
+  // label, brand colour, Simple Icons slug, prefix shown before the handle
+  const NETS = {
+    twitch:    { label: "Twitch",    brand: "#9146ff", slug: "twitch",    prefix: "twitch.tv/" },
+    youtube:   { label: "YouTube",   brand: "#ff0033", slug: "youtube",   prefix: "@" },
+    x:         { label: "X",         brand: "#111111", slug: "x",         prefix: "@" },
+    instagram: { label: "Instagram", brand: "#e1306c", slug: "instagram", prefix: "@" },
+    tiktok:    { label: "TikTok",    brand: "#111111", slug: "tiktok",    prefix: "@" },
+    kick:      { label: "Kick",      brand: "#53fc18", slug: "kick",      prefix: "kick.com/" },
+    discord:   { label: "Discord",   brand: "#5865f2", slug: "discord",   prefix: "discord.gg/" },
+    facebook:  { label: "Facebook",  brand: "#1877f2", slug: "facebook",  prefix: "" },
+  };
+  OL.initPreview(); OL.initAccent();
+  const style = OL.pick("style", ["slide", "pill", "neon"]);
+  document.body.classList.add("s-" + style);
+  const wrap = document.getElementById("wrap");
+  wrap.className = OL.pick("pos", ["bl", "br", "tl", "tr", "bc"]);
+
+  let items = Object.keys(NETS).filter(k => OL.str(k)).map(k => [k, OL.str(k)]);
+  if (!items.length) items = [["twitch", "yourname"], ["youtube", "yourname"], ["instagram", "yourname"], ["discord", "invite"]];
+  const interval = Math.max(2, OL.num("interval", 6)) * 1000;
+
+  function card([key, handle]) {
+    const { label, brand, slug, prefix } = NETS[key];
+    const el = document.createElement("div");
+    el.className = "card in";
+    // black brand colours are invisible on the neon style's dark card
+    el.style.setProperty("--brand", brand === "#111111" && style === "neon" ? "#ffffff" : brand);
+    el.innerHTML = `<div class="icon"><i></i><b></b></div><div class="txt"><small></small><span></span></div>`;
+    el.querySelector("b").textContent = label[0];
+    el.querySelector("small").textContent = label;
+    // people often type "@name"; don't show "@@name"
+    el.querySelector("span").textContent = prefix + (prefix.endsWith("@") ? handle.replace(/^@/, "") : handle);
+    // brand logo from the Simple Icons CDN; the letter stays if it can't load
+    const url = `https://cdn.jsdelivr.net/npm/simple-icons@11/icons/${slug}.svg`;
+    const img = new Image();
+    img.onload = () => {
+      el.querySelector("i").style.setProperty("--logo", `url(${url})`);
+      el.querySelector(".icon").classList.add("has-logo");
+    };
+    img.src = url;
+    return el;
+  }
+
+  let i = 0;
+  function next() {
+    const show = () => wrap.replaceChildren(card(items[i++ % items.length]));
+    const old = wrap.firstElementChild;
+    if (old) { old.className = "card out"; setTimeout(show, 550); } else show();
+  }
+  next(); setInterval(next, interval);
+</script>
+</body>
+</html>

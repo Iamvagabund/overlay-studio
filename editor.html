@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overlay Editor: customize your free OBS overlay | Overlay Studio</title>
+<meta name="description" content="Customize a free animated OBS overlay with live preview and copy a ready-to-use Browser Source link.">
+<meta name="root" content="./">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="./"><i></i>Overlay Studio</a>
+  <nav><a href="./#free">All overlays</a><a class="lang" id="langlink" href="uk/editor.html" hreflang="uk">UA</a><a class="btn primary" href="./#pro">PRO packs</a></nav>
+</div></header>
+
+<main class="wrap editor">
+  <div class="panel">
+    <div class="picker" id="picker"></div>
+    <h1 id="wname"></h1>
+    <p class="lead" id="wblurb"></p>
+    <p class="note" id="wnote" hidden></p>
+    <form id="form" onsubmit="return false"></form>
+  </div>
+
+  <div class="stage">
+    <div class="screen" id="screen"><iframe id="frame" title="Overlay preview"></iframe></div>
+    <div class="out panel">
+      <div class="url"><input id="url" readonly aria-label="Overlay link"><button class="btn primary" id="copy" data-ui="copy"></button><button class="btn ghost" id="save" data-ui="save"></button></div>
+      <div class="obs">
+        <b data-ui="addObs"></b>
+        <ol>
+          <li>Sources → <code>+</code> → <code>Browser</code></li>
+          <li>Paste the link into <code>URL</code></li>
+          <li>Width <code id="ow"></code>, Height <code id="oh"></code> → OK</li>
+        </ol>
+      </div>
+    </div>
+    <div class="panel mine">
+      <h2 data-ui="myOverlays"></h2>
+      <p class="muted" id="saved-empty" data-ui="noneSaved"></p>
+      <ul class="saved" id="saved"></ul>
+      <label for="paste" data-ui="editLink"></label>
+      <div class="url"><input id="paste" data-ui-ph="pastePh"><button class="btn ghost" id="paste-go" data-ui="open"></button></div>
+    </div>
+    <div class="ad-slot">Advertisement</div>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script src="assets/i18n.js"></script>
+<script src="assets/widgets.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

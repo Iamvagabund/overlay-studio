@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Starting Soon</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=Orbitron:wght@500;900&family=Press+Start+2P&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+  #stage {
+    position: absolute; left: 50%; top: 50%;
+    width: 1920px; height: 1080px;
+    transform-origin: center; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .title, .sub, .timer { position: relative; z-index: 2; }
+  .fx { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+
+  /* ---------- MINIMAL ---------- */
+  .t-minimal { background: #0e0f12; color: #f4f4f5; font-family: Inter, sans-serif; }
+  .t-minimal .title { font-size: 140px; font-weight: 800; letter-spacing: -4px; }
+  .t-minimal .sub { font-size: 36px; font-weight: 300; opacity: .6; margin-top: 10px; }
+  .t-minimal .timer { font-size: 96px; font-weight: 300; margin-top: 60px; font-variant-numeric: tabular-nums; }
+  .t-minimal .bar { position: absolute; bottom: 0; left: 0; height: 8px; background: var(--accent, #3b82f6); z-index: 2; transition: width 1s linear; }
+  .t-minimal .fx::before {
+    content: ""; position: absolute; width: 900px; height: 900px; border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent, #3b82f6) 35%, transparent), transparent 70%);
+    left: -200px; top: -300px; animation: drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift { to { transform: translate(1300px, 500px); } }
+
+  /* ---------- NEON ---------- */
+  .t-neon { background: radial-gradient(ellipse at center, #1a0b2e 0%, #05010a 75%); color: #fff; font-family: Orbitron, sans-serif; }
+  .t-neon .title {
+    font-size: 150px; font-weight: 900; letter-spacing: 8px; color: #fff;
+    text-shadow: 0 0 10px var(--accent, #ff2bd6), 0 0 30px var(--accent, #ff2bd6), 0 0 80px var(--accent, #ff2bd6);
+    animation: flicker 5s infinite;
+  }
+  .t-neon .sub { font-size: 34px; letter-spacing: 12px; color: #00f0ff; text-shadow: 0 0 12px #00f0ff; margin-top: 20px; }
+  .t-neon .timer {
+    font-size: 110px; font-weight: 500; margin-top: 60px; color: #00f0ff; font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 20px #00f0ff; border: 3px solid #00f0ff; padding: 10px 60px; border-radius: 16px;
+    box-shadow: 0 0 30px #00f0ff66, inset 0 0 30px #00f0ff33;
+  }
+  .t-neon .fx {
+    background:
+      linear-gradient(transparent 0 96%, color-mix(in srgb, var(--accent, #ff2bd6) 50%, transparent) 96%) 0 0 / 100% 80px,
+      linear-gradient(90deg, transparent 0 96%, color-mix(in srgb, var(--accent, #ff2bd6) 50%, transparent) 96%) 0 0 / 80px 100%;
+    transform: perspective(600px) rotateX(60deg) translateY(300px) scale(2.2);
+    transform-origin: bottom; opacity: .35; animation: grid 2s linear infinite;
+  }
+  @keyframes grid { to { background-position: 0 80px, 0 0; } }
+  @keyframes flicker { 0%,19%,21%,62%,64%,100% { opacity: 1; } 20%,63% { opacity: .55; } }
+
+  /* ---------- PIXEL ---------- */
+  .t-pixel { background: #1b1f3b; color: #fff; font-family: "Press Start 2P", monospace; image-rendering: pixelated; }
+  .t-pixel .title { font-size: 90px; color: var(--accent, #ffd23f); text-shadow: 8px 8px 0 #e8505b, 16px 16px 0 #000; line-height: 1.3; }
+  .t-pixel .sub { font-size: 28px; margin-top: 40px; animation: blink 1s steps(1) infinite; }
+  .t-pixel .timer { font-size: 80px; margin-top: 60px; background: #000; padding: 30px 50px; border: 8px solid #fff; box-shadow: 8px 8px 0 #e8505b; }
+  .t-pixel .fx::before, .t-pixel .fx::after {
+    content: ""; position: absolute; width: 8px; height: 8px; background: transparent;
+    box-shadow: 120px 80px #fff, 400px 200px #fff, 800px 90px #fff, 1100px 260px #fff, 1500px 120px #fff, 1800px 300px #fff,
+                220px 600px #fff, 600px 900px #fff, 1000px 750px #fff, 1400px 950px #fff, 1700px 700px #fff, 300px 1000px #fff;
+    animation: twinkle 1.6s steps(2) infinite;
+  }
+  .t-pixel .fx::after { transform: translate(90px, 140px); animation-delay: .8s; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes twinkle { 50% { opacity: .2; } }
+
+  /* ---------- COZY ---------- */
+  .t-cozy { background: linear-gradient(160deg, #f9d9e3 0%, #e6d8f5 50%, #cfe7f5 100%); color: #5b4b6b; font-family: Quicksand, sans-serif; }
+  .t-cozy .title { font-size: 130px; font-weight: 700; }
+  .t-cozy .sub { font-size: 40px; margin-top: 10px; opacity: .8; }
+  .t-cozy .timer {
+    font-size: 90px; font-weight: 700; margin-top: 60px; background: #ffffffaa; padding: 20px 70px;
+    border-radius: 999px; box-shadow: 0 20px 50px #7a5c9933; font-variant-numeric: tabular-nums;
+    color: var(--accent, #b56a9a);
+  }
+  .t-cozy .fx span {
+    position: absolute; bottom: -60px; border-radius: 50%; background: #ffffff88;
+    animation: rise linear infinite;
+  }
+  @keyframes rise { to { transform: translateY(-1250px); opacity: 0; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="fx"></div>
+  <div class="title" id="title"></div>
+  <div class="sub" id="sub"></div>
+  <div class="timer" id="timer"></div>
+  <div class="bar" id="bar"></div>
+</div>
+<script src="lib.js"></script>
+<script>
+  // Settings via URL: ?theme=minimal|neon|pixel|cozy &title=... &sub=... &minutes=10 or &until=19:30 &accent=%23ff0000 &done=...
+  OL.initAccent();
+  const theme = OL.pick("theme", ["minimal", "neon", "pixel", "cozy"]);
+  const DEFAULTS = {
+    minimal: ["Starting Soon", "Grab a drink, we'll be live shortly"],
+    neon:    ["STARTING SOON", "STAY TUNED"],
+    pixel:   ["STARTING SOON", "PRESS START"],
+    cozy:    ["starting soon ☕", "get comfy, we'll be right there"],
+  };
+  const [defaultTitle, defaultSub] = DEFAULTS[theme];
+  const stage = document.getElementById("stage");
+  stage.className = "t-" + theme;
+  document.getElementById("title").textContent = OL.str("title", defaultTitle);
+  document.getElementById("sub").textContent = OL.str("sub", defaultSub);
+  const doneText = OL.str("done", theme === "pixel" ? "READY!" : "Starting now!");
+
+  if (theme === "cozy") {
+    const fx = stage.querySelector(".fx");
+    for (let i = 0; i < 18; i++) {
+      const bubble = document.createElement("span"), d = 20 + Math.random() * 60;
+      Object.assign(bubble.style, {
+        left: Math.random() * 1920 + "px", width: d + "px", height: d + "px",
+        animationDuration: 10 + Math.random() * 14 + "s", animationDelay: -Math.random() * 20 + "s",
+      });
+      fx.append(bubble);
+    }
+  }
+
+  const end = OL.str("until") ? OL.nextTime(OL.str("until")) : Date.now() + OL.num("minutes", 5) * 60000;
+  const total = Math.max(1, end - Date.now());
+  const timer = document.getElementById("timer"), bar = document.getElementById("bar");
+  function tick() {
+    const left = Math.max(0, end - Date.now());
+    timer.textContent = left ? OL.clock(Math.ceil(left / 1000)) : doneText;
+    bar.style.width = (100 - (left / total) * 100) + "%";
+  }
+  tick(); setInterval(tick, 250);
+  OL.fitStage(stage);
+</script>
+</body>
+</html>

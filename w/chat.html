@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stream Chat</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=JetBrains+Mono:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* Settings via URL:
+     ?channel=yourtwitchname  &style=bubble|neon|terminal|cozy  &max=8  &fade=30 (seconds, 0 = never)
+     &size=24 (font px)  &hide=bot1,bot2 (hidden on top of common bots)  &demo=1 (fake messages for testing) */
+  :root { --size: 24px; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+  body.preview { background: linear-gradient(135deg, #1e293b, #0f172a 60%, #312e81); }
+  #chat { position: absolute; left: 20px; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; font-size: var(--size); }
+  .msg { max-width: 100%; line-height: 1.35; overflow-wrap: anywhere; }
+  .name { font-weight: 700; }
+  .emote { height: 1.6em; vertical-align: middle; margin: -.2em .1em; }
+  .msg.gone { animation: out .6s ease-in forwards; }
+  @keyframes out { to { opacity: 0; transform: translateX(-40px); } }
+
+  /* BUBBLE — rounded dark bubbles pop in with a bounce */
+  .s-bubble { font-family: "Space Grotesk", sans-serif; }
+  .s-bubble .msg { align-self: flex-start; background: #0d0f14e6; color: #f1f5f9; padding: 10px 18px; border-radius: 22px 22px 22px 6px; box-shadow: 0 8px 24px #0006; animation: pop .5s cubic-bezier(.2, 1.6, .4, 1) both; border-left: 4px solid var(--c); }
+  .s-bubble .name { color: var(--c); display: block; font-size: .75em; }
+  @keyframes pop { from { transform: scale(.6) translateY(20px); opacity: 0; } }
+
+  /* NEON — glowing username, messages slide with light trail */
+  .s-neon { font-family: "Space Grotesk", sans-serif; }
+  .s-neon .msg { color: #fff; padding: 8px 16px; background: linear-gradient(90deg, #05010acc, #05010a00); border-left: 3px solid var(--c); animation: slide .45s ease-out both; text-shadow: 0 2px 6px #000; }
+  .s-neon .name { color: var(--c); text-shadow: 0 0 10px var(--c), 0 0 20px var(--c); margin-right: 8px; }
+  @keyframes slide { from { transform: translateX(-60px); opacity: 0; filter: blur(6px); } }
+
+  /* TERMINAL — hacker console with typing effect */
+  .s-terminal { font-family: "JetBrains Mono", monospace; }
+  .s-terminal #chat { background: #020a04e6; border: 1px solid #22c55e66; border-radius: 10px; padding: 16px 18px; gap: 6px; box-shadow: 0 0 30px #22c55e22; }
+  .s-terminal #chat::before { content: "● ● ●  chat.exe"; color: #22c55e99; font-size: .6em; margin-bottom: 6px; }
+  .s-terminal .msg { color: #b7f7c8; animation: type .35s steps(12) both; }
+  .s-terminal .name { color: var(--c); }
+  .s-terminal .name::before { content: "> "; color: #22c55e; }
+  .s-terminal .name::after { content: ":"; color: #22c55e; margin-right: 8px; }
+  @keyframes type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+  /* COZY — pastel cards that float up */
+  .s-cozy { font-family: Quicksand, sans-serif; }
+  .s-cozy .msg { align-self: flex-start; background: #fffffff0; color: #5b4b6b; padding: 10px 18px; border-radius: 18px; box-shadow: 0 10px 30px #7a5c9944; animation: float .7s ease-out both; }
+  .s-cozy .name { color: #b56a9a; margin-right: 8px; }
+  .s-cozy .name::before { content: "♡ "; }
+  @keyframes float { from { transform: translateY(30px); opacity: 0; } }
+</style>
+</head>
+<body>
+<div id="chat"></div>
+<script src="lib.js"></script>
+<script>
+  OL.initPreview();
+  document.body.classList.add("s-" + OL.pick("style", ["bubble", "neon", "terminal", "cozy"]));
+  if (OL.has("size")) document.documentElement.style.setProperty("--size", OL.num("size", 24) + "px");
+  const MAX = OL.num("max", 8);
+  const FADE = OL.num("fade", 30);
+  // common bots are always hidden; &hide= adds more names on top
+  const BOTS = ["nightbot", "streamelements", "streamlabs", "moobot", "fossabot"];
+  const hidden = new Set([...BOTS, ...OL.str("hide").toLowerCase().split(",").map(s => s.trim()).filter(Boolean)]);
+  const chat = document.getElementById("chat");
+  const PALETTE = ["#ff6b6b", "#ffd93d", "#6bcb77", "#4d96ff", "#c77dff", "#ff8fab", "#48cae4", "#f4a261"];
+
+  /** Twitch colour if the user set one, otherwise a stable colour picked from their name. */
+  function colorFor(name, given) {
+    if (given) return given;
+    let h = 0;
+    for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) | 0;
+    return PALETTE[Math.abs(h) % PALETTE.length];
+  }
+
+  /** Message text -> DOM nodes, with emote ranges replaced by images. Ranges count code points, like Twitch. */
+  function render(text, emotes) {
+    const frag = document.createDocumentFragment(), chars = [...text];
+    let pos = 0;
+    for (const { id, start, end } of [...emotes].sort((a, b) => a.start - b.start)) {
+      if (start > pos) frag.append(chars.slice(pos, start).join(""));
+      const img = document.createElement("img");
+      img.className = "emote";
+      img.src = OL.emoteUrl(id);
+      img.alt = chars.slice(start, end + 1).join("");
+      frag.append(img);
+      pos = end + 1;
+    }
+    if (pos < chars.length) frag.append(chars.slice(pos).join(""));
+    return frag;
+  }
+
+  function remove(msg) {
+    if (!msg || msg.classList.contains("gone")) return;
+    msg.classList.add("gone");
+    setTimeout(() => msg.remove(), 600);
+  }
+
+  function add({ name, color, text, emotes = [] }) {
+    if (hidden.has(name.toLowerCase())) return;
+    const msg = document.createElement("div");
+    msg.className = "msg";
+    msg.style.setProperty("--c", colorFor(name, color));
+    const nameEl = document.createElement("span");
+    nameEl.className = "name";
+    nameEl.textContent = name;
+    const textEl = document.createElement("span");
+    textEl.append(render(text, emotes));
+    msg.append(nameEl, textEl);
+    chat.append(msg);
+    const visible = chat.querySelectorAll(".msg:not(.gone)");
+    for (let i = 0; i < visible.length - MAX; i++) remove(visible[i]);
+    if (FADE > 0) setTimeout(() => remove(msg), FADE * 1000);
+  }
+
+  function demo() {
+    const lines = [
+      ["NightOwl", "yooo just got here 👋"], ["pixel_pete", "that play was insane"], ["Mira", "hi chat! ☕"],
+      ["GG_Gary", "LET'S GOOOO"], ["sunny_dev", "the new overlay looks so clean"], ["Kappa_King", "Kappa", [{ id: "25", start: 0, end: 4 }]],
+      ["lofi_lena", "vibes are immaculate today"], ["TurboTom", "first time here, followed!"],
+    ];
+    let i = 0;
+    const next = () => { const [name, text, emotes] = lines[i++ % lines.length]; add({ name, text, emotes }); };
+    for (let k = 0; k < 5; k++) next();
+    setInterval(next, 1800);
+  }
+
+  const channel = OL.str("channel");
+  if (OL.has("demo") || !channel) demo(); else OL.twitchChat(channel, add);
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Як додати чат Twitch в OBS (безкоштовно, без логіну) | Overlay Studio</title>
+<meta name="description" content="Покрокова інструкція, як показати чат Twitch на стрімі в OBS Studio чи Streamlabs за допомогою безкоштовного анімованого оверлею. Без акаунта, бота і токена.">
+<link rel="alternate" hreflang="en" href="https://iamvagabund.github.io/overlay-studio/guides/how-to-add-twitch-chat-to-obs.html">
+<link rel="alternate" hreflang="uk" href="https://iamvagabund.github.io/overlay-studio/uk/guides/yak-dodaty-chat-twitch-v-obs.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="../"><i></i>Overlay Studio</a>
+  <nav><a href="../#guides">Інструкції</a><a class="lang" href="../../guides/how-to-add-twitch-chat-to-obs.html" hreflang="en">EN</a><a class="btn primary" href="../editor.html?w=chat">Відкрити безкоштовний редактор →</a></nav>
+</div></header>
+<main class="wrap article">
+  <p class="crumbs"><a href="../#guides">← Усі інструкції</a></p>
+  <h1>Як додати чат Twitch в OBS (безкоштовно, без логіну)</h1>
+<p>Чат на екрані робить стрім живим: глядачі бачать, як з'являються їхні повідомлення, а ті, хто дивиться запис, розуміють, що відбувається. Ось найшвидший спосіб безкоштовно додати гарний чат Twitch в OBS.</p>
+<h2>Що потрібно</h2>
+<ul><li>OBS Studio або Streamlabs Desktop</li><li>Назва вашого каналу Twitch</li><li>Приблизно дві хвилини</li></ul>
+<p>Входити кудись, ставити бота чи копіювати секретний токен <b>не потрібно</b>. Оверлей читає ваш публічний чат лише на перегляд, так само як його бачить будь-який глядач.</p>
+<h2>Крок 1. Налаштуйте чат</h2>
+<ol><li>Відкрийте безкоштовний <a href="../editor.html?w=chat">редактор чату</a>.</li><li>Впишіть назву свого каналу Twitch.</li><li>Виберіть стиль: <b>Bubble</b>, <b>Neon</b>, <b>Terminal</b> або <b>Cozy</b>.</li><li>Задайте розмір шрифту, скільки повідомлень показувати і скільки кожне тримається на екрані.</li></ol>
+<p>Щойно ви впишете канал, у прев'ю праворуч з'явиться ваш справжній чат. Якщо в чаті тихо, залиште назву порожньою, і побачите демо-повідомлення.</p>
+<h2>Крок 2. Скопіюйте посилання</h2>
+<p>Натисніть <b>Копіювати</b>. Усі налаштування зберігаються прямо в посиланні, тож більше нічого зберігати не треба.</p>
+<h2>Крок 3. Додайте в OBS</h2>
+<ol><li>В OBS, у панелі <b>Sources</b>, натисніть <b>+</b> і виберіть <b>Browser</b>.</li><li>Назвіть джерело «Чат» і натисніть OK.</li><li>Вставте посилання в поле <b>URL</b>.</li><li>Вкажіть <b>Width 500</b> і <b>Height 800</b> (або розмір, який показує редактор).</li><li>Натисніть OK і перетягніть чат куди потрібно.</li></ol>
+<p>Фон прозорий, тому поверх гри чи камери видно лише повідомлення.</p>
+<h2>Поради</h2>
+<ul><li><b>Боти</b>: Nightbot, StreamElements та інші популярні боти приховані автоматично. Інші імена можна додати в «Не показувати цих користувачів».</li><li><b>Емоути</b> показуються картинками, як на самому Twitch.</li><li><b>Повідомлення зникають</b> через 30 секунд. Поставте 0, щоб вони не зникали.</li><li>Щоб <b>змінити стиль пізніше</b>, вставте старе посилання в поле «Редагувати наявне посилання» в редакторі.</li></ul>
+<h2>Якщо щось не працює</h2>
+<ul><li><b>Нічого не з'являється</b>: перевірте назву каналу. Потрібна та, що в адресі вашого Twitch, а не відображуване ім'я.</li><li><b>Чат задрібний або завеликий</b>: змініть ширину й висоту джерела або розмір шрифту в редакторі.</li><li><b>Показуються старі налаштування</b>: правий клік на джерелі в OBS → Refresh.</li></ul>
+  <p><a class="btn primary" href="../editor.html?w=chat">Відкрити безкоштовний редактор →</a></p>
+</main>
+<footer><div class="wrap">© Overlay Studio. Зроблено для стрімерів.</div></footer>
+</body>
+</html>

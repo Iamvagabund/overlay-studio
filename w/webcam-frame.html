@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Webcam Frame</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Press+Start+2P&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* Settings via URL: ?style=neon|rainbow|minimal|glitch|pixel|glass &name=YourName &accent=%23ff00aa &thick=8 &radius=24 */
+  @property --a { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+  :root { --accent: #a855f7; --t: 8px; --r: 24px; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; font-family: "Space Grotesk", sans-serif; }
+  body.preview { background: linear-gradient(135deg, #1e293b, #0f172a 60%, #312e81); }
+  body.preview .cam { position: absolute; inset: 20px; border-radius: var(--r); background: radial-gradient(circle at 50% 42%, #64748b 0 13%, transparent 13.5%), radial-gradient(ellipse at 50% 95%, #64748b 0 32%, transparent 32.5%), linear-gradient(#334155, #1e293b); }
+  .frame { position: absolute; inset: 12px; border-radius: var(--r); pointer-events: none; }
+  .ring { position: absolute; inset: 0; border-radius: inherit; padding: var(--t);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+  .tag { position: absolute; left: calc(var(--t) + 18px); bottom: calc(var(--t) + 18px); padding: 10px 22px; font-weight: 700; font-size: 26px; color: #fff; white-space: nowrap; z-index: 3; }
+
+  /* NEON — light racing around the frame */
+  .s-neon .ring { background: conic-gradient(from var(--a), transparent 0 60%, var(--accent) 80%, #fff 85%, var(--accent) 90%, transparent 100%), linear-gradient(color-mix(in srgb, var(--accent) 25%, transparent) 0 0); animation: spin 3s linear infinite; }
+  .s-neon .glow { position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 25px var(--accent), inset 0 0 25px color-mix(in srgb, var(--accent) 50%, transparent); opacity: .6; animation: breathe 3s ease-in-out infinite; }
+  .s-neon .tag { background: #0a0a12; border: 2px solid var(--accent); border-radius: 999px; box-shadow: 0 0 20px var(--accent); }
+
+  /* RAINBOW — thick rotating gradient */
+  .s-rainbow .ring { --t: 12px; background: conic-gradient(from var(--a), #ff0080, #ff8c00, #ffe600, #00e676, #00b0ff, #7c4dff, #ff0080); animation: spin 4s linear infinite; }
+  .s-rainbow .glow { position: absolute; inset: -6px; border-radius: inherit; background: conic-gradient(from var(--a), #ff0080, #ff8c00, #ffe600, #00e676, #00b0ff, #7c4dff, #ff0080); filter: blur(24px); opacity: .55; z-index: -1; animation: spin 4s linear infinite;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; padding: 30px; }
+  .s-rainbow .tag { background: linear-gradient(90deg, #ff0080, #7c4dff); border-radius: 14px; }
+
+  /* MINIMAL — thin line + animated corner brackets */
+  .s-minimal .ring { --t: 2px; background: #ffffff55; }
+  .s-minimal .c { position: absolute; width: 60px; height: 60px; border: 0 solid #fff; animation: pulse 2.4s ease-in-out infinite; }
+  .s-minimal .c1 { top: -8px; left: -8px; border-width: 5px 0 0 5px; border-top-left-radius: calc(var(--r) + 8px); }
+  .s-minimal .c2 { top: -8px; right: -8px; border-width: 5px 5px 0 0; border-top-right-radius: calc(var(--r) + 8px); }
+  .s-minimal .c3 { bottom: -8px; left: -8px; border-width: 0 0 5px 5px; border-bottom-left-radius: calc(var(--r) + 8px); }
+  .s-minimal .c4 { bottom: -8px; right: -8px; border-width: 0 5px 5px 0; border-bottom-right-radius: calc(var(--r) + 8px); }
+  .s-minimal .tag { background: #fff; color: #111; border-radius: 6px; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* GLITCH — RGB-split jittering borders */
+  .s-glitch .frame { --r: 4px; }
+  .s-glitch .ring { --t: 4px; background: #fff; }
+  .s-glitch .r2, .s-glitch .r3 { mix-blend-mode: screen; }
+  .s-glitch .r2 { background: #ff004c; animation: j1 2.2s steps(1) infinite; }
+  .s-glitch .r3 { background: #00e5ff; animation: j2 1.7s steps(1) infinite; }
+  .s-glitch .tag { font-family: "JetBrains Mono", monospace; background: #000; border-left: 6px solid #ff004c; border-right: 6px solid #00e5ff; border-radius: 0; animation: j1 3s steps(1) infinite; }
+  @keyframes j1 { 0%,100% { transform: none; } 8% { transform: translate(-6px, 2px); } 10% { transform: translate(4px,-1px); } 12% { transform: none; } 55% { transform: translate(5px, 0); } 57% { transform: none; } }
+  @keyframes j2 { 0%,100% { transform: none; } 20% { transform: translate(6px,-2px); } 23% { transform: none; } 70% { transform: translate(-5px, 3px); } 72% { transform: none; } }
+
+  /* PIXEL — 8-bit stepped border */
+  .s-pixel .frame { --r: 0px; }
+  .s-pixel .ring { --t: 10px; background: repeating-linear-gradient(90deg, var(--accent) 0 20px, #ffd23f 20px 40px); background-size: 40px 40px; animation: march 1s steps(4) infinite; }
+  .s-pixel .shadow { position: absolute; inset: 0; box-shadow: 10px 10px 0 #000; }
+  .s-pixel .tag { font-family: "Press Start 2P", monospace; font-size: 18px; background: #000; border: 5px solid #fff; box-shadow: 6px 6px 0 var(--accent); }
+  .s-pixel .tag::before { content: "♥ "; color: #e8505b; animation: blink 1s steps(1) infinite; }
+
+  /* GLASS — frosted soft frame */
+  .s-glass .ring { --t: 14px; background: linear-gradient(135deg, #ffffff66, #ffffff14 40%, #ffffff40); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .s-glass .glow { position: absolute; inset: 0; border-radius: inherit; border: 1px solid #ffffff99; box-shadow: 0 20px 60px #0006; }
+  .s-glass .shine { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; }
+  .s-glass .shine::after { content: ""; position: absolute; top: -50%; left: -60%; width: 30%; height: 200%; background: linear-gradient(90deg, transparent, #ffffff55, transparent); transform: rotate(20deg); animation: sweep 5s ease-in-out infinite; }
+  .s-glass .tag { background: #ffffff26; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid #ffffff80; border-radius: 16px; }
+
+  @keyframes spin { to { --a: 360deg; } }
+  @keyframes breathe { 50% { opacity: 1; } }
+  @keyframes pulse { 50% { transform: scale(1.08); opacity: .7; } }
+  @keyframes march { to { background-position: 40px 0; } }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes sweep { 0%, 60% { left: -60%; } 100% { left: 130%; } }
+</style>
+</head>
+<body>
+<div class="cam"></div>
+<div class="frame" id="f">
+  <div class="shadow"></div><div class="glow"></div>
+  <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+  <div class="shine"></div>
+  <div class="c c1"></div><div class="c c2"></div><div class="c c3"></div><div class="c c4"></div>
+  <div class="tag" id="tag"></div>
+</div>
+<script src="lib.js"></script>
+<script>
+  OL.initPreview(); OL.initAccent();
+  const style = OL.pick("style", ["neon", "rainbow", "minimal", "glitch", "pixel", "glass"]);
+  document.body.classList.add("s-" + style);
+  const root = document.documentElement.style;
+  if (OL.has("thick")) root.setProperty("--t", OL.num("thick", 8) + "px");
+  if (OL.has("radius")) root.setProperty("--r", OL.num("radius", 24) + "px");
+  const tag = document.getElementById("tag");
+  if (OL.str("name")) tag.textContent = OL.str("name"); else tag.remove();
+  // only the glitch style uses the extra split rings; only minimal uses corners
+  if (style !== "glitch") document.querySelectorAll(".r2,.r3").forEach(el => el.remove());
+  if (style !== "minimal") document.querySelectorAll(".c").forEach(el => el.remove());
+</script>
+</body>
+</html>
