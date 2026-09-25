@@ -11,7 +11,6 @@ window.WIDGETS = [
     uk: { name: "Заставка «Starting Soon»", blurb: "Анімована заставка з таймером перед стрімом. 4 стилі: мінімалізм, неон, піксель, затишний." },
     file: "starting-soon.html",
     size: [1920, 1080],
-    previewParams: {}, // full-screen scene with its own background, no preview backdrop needed
     img: "img/starting-soon.jpg",
     fields: [
       { key: "theme", label: "Style", uk: { label: "Стиль" }, type: "select", options: ["minimal", "neon", "pixel", "cozy"], def: "minimal" },

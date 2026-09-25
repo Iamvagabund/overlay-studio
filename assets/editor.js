@@ -6,8 +6,9 @@
   const pageParams = new URLSearchParams(location.search);
 
   const widget = WIDGETS.find(w => w.id === pageParams.get("w")) || WIDGETS[0];
-  // base: folder of the widget file (default: the site's w/ folder); previewParams: extra URL params for the preview only
-  const { fields, size: [width, height], file, base = ROOT + "w/", previewParams = { preview: 1 } } = widget;
+  // base: folder of the widget file (default: the site's w/ folder)
+  // previewParams: extra URL params for the preview only. Widgets are shown exactly as in OBS: transparent over the checkerboard.
+  const { fields, size: [width, height], file, base = ROOT + "w/", previewParams = {} } = widget;
 
   // current value of every field; `&cfg=` (a widget query string) pre-fills them, e.g. when opening a saved overlay
   const cfg = new URLSearchParams(pageParams.get("cfg") || "");
