@@ -18,6 +18,7 @@ assets/style.css          стилі всього сайту
 w/                        самі віджети, які завантажує OBS; w/lib.js — спільний код віджетів
 img/                      картинки-прев'ю
 tools/build-guides.py     збирає статті з tools/guides/*.md → guides/ і uk/guides/
+tools/stamp-assets.py     додає ?v=… до CSS/JS, щоб після оновлення браузери не брали старі файли з кешу
 SETUP.md                  ЩО ПІДКЛЮЧИТИ: Netlify, Google, статистика, домен, AdSense
 ```
 
@@ -48,3 +49,11 @@ SETUP.md                  ЩО ПІДКЛЮЧИТИ: Netlify, Google, стати
 - **PRO-блок** на головній веде на Etsy. Це основне.
 - **Реклама:** місця позначені `<div class="ad-slot">`. Коли сайт матиме трафік і власний домен, можна подати заявку в Google AdSense і вставити їхній код замість цих блоків.
 - **SEO:** у кожної сторінки є свій title і description. Коли буде домен, додайте `sitemap.xml` і підключіть сайт у Google Search Console.
+
+## Як опублікувати зміни
+```bash
+python3 tools/build-guides.py      # якщо змінювали статті
+python3 tools/stamp-assets.py      # ОБОВ'ЯЗКОВО: нова версія файлів, інакше браузери змішають старе й нове
+git add -A && git commit -m "..." && git push
+```
+Через 1–2 хвилини зміни на https://iamvagabund.github.io/overlay-studio/
