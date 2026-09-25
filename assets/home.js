@@ -25,7 +25,19 @@
     </div>`;
   };
 
+  const themeCard = t => {
+    const [name, blurb] = [tr(t, "name"), tr(t, "blurb")];
+    const [a, b, bg] = t.colors;
+    return `
+    <a class="card theme-card" href="themes.html?t=${t.id}">
+      <div class="thumb" style="background:radial-gradient(circle at 30% 40%, ${a}aa, transparent 55%), radial-gradient(circle at 75% 65%, ${b}88, transparent 50%), ${bg}"></div>
+      <div class="body"><h3>${esc(name)}</h3><p>${esc(blurb)}</p><span class="btn ghost">${UI.openTheme}</span></div>
+    </a>`;
+  };
+
   document.getElementById("y").textContent = new Date().getFullYear();
+  const themesGrid = document.getElementById("themes-grid");
+  if (themesGrid) themesGrid.innerHTML = THEMES.map(themeCard).join("");
   document.getElementById("free-grid").innerHTML = WIDGETS.map(freeCard).join("");
   document.getElementById("pro-grid").innerHTML = PRO.map(proCard).join("");
 })();

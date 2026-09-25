@@ -7,7 +7,7 @@
 <style>
   /* Settings via URL:
      ?channel=yourtwitchname  &style=bubble|neon|terminal|cozy  &max=8  &fade=30 (seconds, 0 = never)
-     &size=24 (font px)  &hide=bot1,bot2 (hidden on top of common bots)  &demo=1 (fake messages for testing) */
+     &size=24 (font px)  &hide=bot1,bot2 (hidden on top of common bots)  &demo=1 (sample messages, for testing only) */
   :root { --size: 24px; }
   html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
   body.preview { background: linear-gradient(135deg, #1e293b, #0f172a 60%, #312e81); }
@@ -123,8 +123,11 @@
     setInterval(next, 1800);
   }
 
+  // sample messages only when asked for (&demo=1, the editor preview); a link without a channel shows a setup hint
   const channel = OL.str("channel");
-  if (OL.has("demo") || !channel) demo(); else OL.twitchChat(channel, add);
+  if (OL.has("demo")) demo();
+  else if (channel) OL.twitchChat(channel, add);
+  else add({ name: "Overlay Studio", color: "#f59e0b", text: "⚙️ Add your Twitch channel: open this overlay in Overlay Studio and fill in the channel." });
 </script>
 </body>
 </html>

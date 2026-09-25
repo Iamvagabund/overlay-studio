@@ -79,6 +79,21 @@ footer { border-top: 1px solid var(--line); color: var(--muted); padding: 30px 0
 .guides a:hover { border-color: var(--accent); }
 .guides small { display: block; color: var(--muted); font-weight: 400; margin-top: 4px; }
 
+/* themes */
+.swatch { display: inline-flex; gap: 4px; vertical-align: middle; }
+.swatch i { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ffffff33; display: inline-block; }
+.thumb { position: relative; aspect-ratio: 16/9; overflow: hidden; background: #000; }
+.thumb iframe { position: absolute; left: 50%; top: 50%; border: 0; transform-origin: center; pointer-events: none; }
+.thumb.checker { background: repeating-conic-gradient(#15151f 0 25%, #1b1b28 0 50%) 0 0 / 20px 20px; }
+.theme-card { text-decoration: none; }
+.kit-card .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.kit-card .row .btn { flex: 1; justify-content: center; padding: 10px 14px; }
+.kit-card .need { color: #fcd34d; font-size: 14px; flex: 0; }
+.btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
+.personal { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 28px; }
+.page-head h1 { font-size: clamp(30px, 5vw, 46px); letter-spacing: -1px; margin: 10px 0 8px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.page-head .swatch i { width: 22px; height: 22px; }
+
 /* editor */
 .editor { display: grid; grid-template-columns: 360px 1fr; gap: 24px; padding: 24px 0 40px; align-items: start; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
@@ -118,6 +133,9 @@ footer { border-top: 1px solid var(--line); color: var(--muted); padding: 30px 0
 .saved a:hover { color: var(--accent-2); }
 .saved button { background: none; border: 0; color: var(--muted); font-size: 18px; cursor: pointer; padding: 0 6px; }
 .saved button:hover { color: #f87171; }
+.demo-note { margin: 10px 0 0; padding: 10px 14px; border-radius: 10px; background: #f59e0b1a; border: 1px solid #f59e0b55; color: #fcd34d; font-size: 14px; }
+.field input.invalid { outline: 2px solid #f87171; border-color: transparent; animation: shake .3s; }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--ok); color: #04210f; font-weight: 700; padding: 12px 20px; border-radius: 10px; transition: transform .25s, opacity .25s; opacity: 0; pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 

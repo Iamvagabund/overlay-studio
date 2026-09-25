@@ -66,9 +66,10 @@ window.WIDGETS = [
     uk: { name: "Чат Twitch на стрімі", blurb: "Живий чат на екрані з емоутами. Стилі: бульбашки, неон, термінал, затишний. Без логіну." },
     file: "chat.html",
     size: [500, 800],
+    demoParams: { demo: 1 }, // sample messages in the preview until a channel is typed; never in OBS links
     img: "img/chat.jpg",
     fields: [
-      { key: "channel", label: "Your Twitch channel", uk: { label: "Ваш канал Twitch", hint: "Залиште порожнім, щоб побачити демо-повідомлення." }, type: "text", def: "", placeholder: "yourname", hint: "Leave empty to see demo messages." },
+      { key: "channel", label: "Your Twitch channel", uk: { label: "Ваш канал Twitch", hint: "Назва з адреси twitch.tv/…" }, type: "text", def: "", placeholder: "yourname", hint: "The name from your twitch.tv/… address.", required: true },
       { key: "style", label: "Style", uk: { label: "Стиль" }, type: "select", options: ["bubble", "neon", "terminal", "cozy"], def: "bubble" },
       { key: "size", label: "Font size (px)", uk: { label: "Розмір шрифту (px)" }, type: "number", def: "24", min: 12, max: 60 },
       { key: "max", label: "Max messages", uk: { label: "Максимум повідомлень" }, type: "number", def: "8", min: 1, max: 30 },
@@ -145,4 +146,60 @@ window.PRO = [
   { name: "Emote Rain", blurb: "Your chat's emotes fall onto the stream with real physics, bounce and pile up.",
     uk: { name: "Дощ емоутів", blurb: "Емоути з чату падають на стрім зі справжньою фізикою, відскакують і складаються в купу." },
     img: "img/pro-emote-rain.jpg", price: "$10" },
+];
+
+// Ready-made themes: every free widget pre-styled to match. `items` holds each widget's settings
+// (same keys as its fields). On the themes page the user's channel and name are added on top (see PERSONAL).
+window.THEMES = [
+  {
+    id: "neon", name: "Neon Night", uk: { name: "Неонова ніч", blurb: "Рожевий неон і світіння. Яскраво, як кіберпанк-вивіска." },
+    blurb: "Hot pink neon and glow. Loud, bright, cyberpunk sign energy.", colors: ["#ff2bd6", "#00f0ff", "#1a0b2e"],
+    items: {
+      "starting-soon": { theme: "neon", accent: "#ff2bd6" }, "webcam-frame": { style: "neon", accent: "#ff2bd6" },
+      chat: { style: "neon" }, socials: { style: "neon" }, goal: { style: "neon", accent: "#ff2bd6" },
+      timer: { style: "neon", accent: "#ff2bd6" }, counter: { style: "card", accent: "#ff2bd6" },
+    },
+  },
+  {
+    id: "retro", name: "Retro Arcade", uk: { name: "Ретро-аркада", blurb: "Піксельні шрифти й 8-бітні рамки. Для ретро- й інді-ігор." },
+    blurb: "Pixel fonts and 8-bit borders. Made for retro and indie games.", colors: ["#ffd23f", "#e8505b", "#1b1f3b"],
+    items: {
+      "starting-soon": { theme: "pixel", accent: "#ffd23f" }, "webcam-frame": { style: "pixel", accent: "#8b5cf6" },
+      chat: { style: "terminal" }, socials: { style: "slide" }, goal: { style: "pixel", accent: "#8b5cf6" },
+      timer: { style: "pixel", accent: "#e8505b" }, counter: { style: "pixel", accent: "#e8505b" },
+    },
+  },
+  {
+    id: "cozy", name: "Cozy Pastel", uk: { name: "Затишна пастель", blurb: "М'які пастельні кольори й скло. Для спокійних стрімів і розмов." },
+    blurb: "Soft pastels and frosted glass. For chill streams and chatting.", colors: ["#f9d9e3", "#cfe7f5", "#b56a9a"],
+    items: {
+      "starting-soon": { theme: "cozy", accent: "#b56a9a" }, "webcam-frame": { style: "glass" },
+      chat: { style: "cozy" }, socials: { style: "pill" }, goal: { style: "sleek", accent: "#f472b6" },
+      timer: { style: "pill", accent: "#f472b6" }, counter: { style: "card", accent: "#f472b6", icon: "☕", label: "Cups of tea" },
+    },
+  },
+  {
+    id: "cyber", name: "Cyber Glitch", uk: { name: "Кібер-глітч", blurb: "Зламаний сигнал, розшарування кольорів, термінал. Для шутерів і хакерської естетики." },
+    blurb: "Broken signal, RGB split, hacker terminal. For shooters and cyber vibes.", colors: ["#00e5ff", "#ff004c", "#05010a"],
+    items: {
+      "starting-soon": { theme: "neon", accent: "#00e5ff" }, "webcam-frame": { style: "glitch" },
+      chat: { style: "terminal" }, socials: { style: "neon" }, goal: { style: "neon", accent: "#00e5ff" },
+      timer: { style: "neon", accent: "#ff004c" }, counter: { style: "card", accent: "#00e5ff" },
+    },
+  },
+  {
+    id: "clean", name: "Clean Minimal", uk: { name: "Чистий мінімал", blurb: "Стримано й охайно. Пасує до будь-якої гри." },
+    blurb: "Understated and tidy. Works with any game.", colors: ["#3b82f6", "#e5e7eb", "#0e0f12"],
+    items: {
+      "starting-soon": { theme: "minimal", accent: "#3b82f6" }, "webcam-frame": { style: "minimal" },
+      chat: { style: "bubble" }, socials: { style: "slide" }, goal: { style: "sleek", accent: "#3b82f6" },
+      timer: { style: "pill", accent: "#3b82f6" }, counter: { style: "card", accent: "#3b82f6" },
+    },
+  },
+];
+
+// On the themes page the user types these once; they're copied into every widget that has the field.
+window.PERSONAL = [
+  { id: "channel", label: "Your Twitch channel", uk: { label: "Ваш канал Twitch" }, placeholder: "yourname", to: { chat: "channel", socials: "twitch" } },
+  { id: "name", label: "Your name on camera", uk: { label: "Ім'я на рамці камери" }, placeholder: "YourName", to: { "webcam-frame": "name" } },
 ];

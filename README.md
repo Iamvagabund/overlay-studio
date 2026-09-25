@@ -9,6 +9,9 @@ uk/                       українська версія (index.html, editor.
 guides/                   статті-інструкції англійською (згенеровані, не редагувати вручну)
 assets/i18n.js            мова сторінки, функція tr() і тексти інтерфейсу (en/uk)
 assets/widgets.js         СПИСОК ВІДЖЕТІВ І ПОЛІВ з перекладами + ETSY_URL
+themes.html               готові теми: усі віджети в одному стилі (?t=neon|retro|cozy|cyber|clean), є й uk/themes.html
+assets/links.js           побудова посилань на віджети (спільне для редактора і тем)
+assets/themes.js          код сторінки тем; самі теми описані в widgets.js (THEMES, PERSONAL)
 assets/home.js            код головної (обидві мови)
 assets/editor.js          код редактора: форма, прев'ю, посилання, «Мої оверлеї»
 assets/style.css          стилі всього сайту
